@@ -140,7 +140,7 @@ fn main() {
                     upgrade: None,
                 };
             };
-            if !request.url().starts_with("/tf/maps/") {
+            if !request.url().starts_with("/maps/") {
                 return Response {
                     status_code: 404,
                     headers: vec![],
@@ -149,7 +149,7 @@ fn main() {
                 };
             };
 
-            let xz_name = request.url().drain(9..).collect::<String>() + ".xz";
+            let xz_name = request.url().drain(6..).collect::<String>() + ".xz";
             let path = (&runconfig.paths)
                 .iter()
                 .map(|path| path.join(&xz_name))
