@@ -8,7 +8,6 @@ edition = "2018"
 [dependencies]
 rouille = {version = "*",  default-features = false }
 xz2 = "*"
-exitcode = "*"
 toml = "*"
 serde = { version = "*", features = ["derive"] }
 
