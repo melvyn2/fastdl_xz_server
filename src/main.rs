@@ -48,8 +48,8 @@ fn print_help() {
     println!(
         "\t{} [PATH]",
         env::args()
-            .nth(0)
-            .unwrap_or(env!("CARGO_PKG_NAME").to_string())
+            .next()
+            .unwrap_or_else(|| env!("CARGO_PKG_NAME").to_string())
     );
     println!("Where [PATH] is an optional path to the TOML-format config file");
 }
@@ -83,16 +83,15 @@ fn filter_hosts(host: &str, allowed_hosts: &Vec<String>) -> bool {
 }
 
 fn main() {
-    if env::args()
-        .find(|arg| (arg == "-h") || (arg == "--help"))
-        .is_some()
-    {
+    if env::args().any(|arg| (arg == "-h") || (arg == "--help")) {
         print_help();
         exit(0)
     }
 
     let loaded_config = {
-        let passed_path_str = env::args().nth(1).unwrap_or("/etc/fdl.toml".to_string());
+        let passed_path_str = env::args()
+            .nth(1)
+            .unwrap_or_else(|| "/etc/fdl.toml".to_string());
         let passed_path = PathBuf::from(passed_path_str);
 
         if passed_path.exists() {
@@ -126,7 +125,7 @@ fn main() {
     };
 
     rouille::start_server(runconfig.socket, move |request| {
-        rouille::log(&request, std::io::stdout(), || {
+        rouille::log(request, std::io::stdout(), || {
             #[cfg(feature = "filtering")]
             {
                 if !filter_hosts(
@@ -164,7 +163,7 @@ fn main() {
                 .map(|path| path.join(&xz_name))
                 .find(|path| path.is_file());
 
-            if !path.is_some() {
+            if path.is_none() {
                 return Response {
                     status_code: 404,
                     headers: vec![],
