@@ -75,11 +75,11 @@ fn process_whitelist(hosts: Option<Vec<String>>) -> Vec<String> {
 #[cfg(feature = "filtering")]
 fn filter_hosts(host: &str, allowed_hosts: &Vec<String>) -> bool {
     // If empty just skip
-    allowed_hosts.len() == 0
+    allowed_hosts.is_empty()
         || allowed_hosts
             .iter()
             .map(|allowed| host.starts_with(allowed.as_str()))
-            .fold(false, |res, new| res || new)
+            .any(|new| new)
 }
 
 fn main() {
@@ -158,7 +158,7 @@ fn main() {
             }
 
             let xz_name = request.url().drain(6..).collect::<String>() + ".xz";
-            let path = (&runconfig.paths)
+            let path = runconfig.paths
                 .iter()
                 .map(|path| path.join(&xz_name))
                 .find(|path| path.is_file());
