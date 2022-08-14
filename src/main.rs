@@ -158,7 +158,8 @@ fn main() {
             }
 
             let xz_name = request.url().drain(6..).collect::<String>() + ".xz";
-            let path = runconfig.paths
+            let path = runconfig
+                .paths
                 .iter()
                 .map(|path| path.join(&xz_name))
                 .find(|path| path.is_file());
