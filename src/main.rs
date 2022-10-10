@@ -80,16 +80,7 @@ fn main() {
         exit(0)
     }
 
-    // Log directly to systemd journal if available
-    if systemd_journal_logger::connected_to_journal() {
-        systemd_journal_logger::init_with_extra_fields(vec![(
-            "VERSION",
-            env!("CARGO_PKG_VERSION"),
-        )])
-        .unwrap();
-    } else {
-        env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("trace")).init();
-    }
+    env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("trace")).init();
 
     let config = {
         let passed_path_str = env::args()
