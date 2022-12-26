@@ -175,6 +175,7 @@ fn main() {
                 data: ResponseBody::from_reader(XzDecoder::new(File::open(path.unwrap()).unwrap())),
                 upgrade: None,
             }
+            .with_public_cache(3600)
         })
     });
 }
